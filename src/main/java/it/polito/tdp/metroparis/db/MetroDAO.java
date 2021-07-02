@@ -68,7 +68,8 @@ public class MetroDAO {
 
 		return linee;
 	}
-
+	
+	//verifica se 2 fermate sono collegate
 	public boolean fermateCollegate(Fermata f1, Fermata f2) {
 		String sql = "SELECT COUNT(*) AS cnt " +
 				"FROM connessione " +
@@ -98,6 +99,7 @@ public class MetroDAO {
 		}
 	}
 	
+	// trova tutte le connessioni del db
 	public List<Connessione> getAllConnessioni(List<Fermata> fermate) {
 		String sql = "SELECT  id_connessione, id_linea, id_stazP, id_stazA "
 				+ "FROM connessione "
@@ -113,18 +115,27 @@ public class MetroDAO {
 			List<Connessione> result = new ArrayList<Connessione>();
 			while(rs.next()) {
 				
+				// per creare connessione, dobbiamo salvare fermate interamente.. andiamo a cercarle
 				int id_partenza = rs.getInt("id_stazP") ;
+				
 				Fermata fermata_partenza = null ;
+					
+				// NON POSSIAMO FARE FERMATE.GET(ID_PARTENZA) !!!!
+				// IL GET DELLE LISTE OPERA SUGLI INDICI DI POSIZIONE
+				
 				for(Fermata f: fermate) 
 					if(f.getIdFermata()==id_partenza)
 						fermata_partenza = f ;
 				
 				int id_arrivo= rs.getInt("id_stazA") ;
-				Fermata fermata_arrivo = null ;
+				
+				Fermata fermata_arrivo = null ;		
+				
 				for(Fermata f: fermate) 
 					if(f.getIdFermata()==id_arrivo)
 						fermata_arrivo = f ;
-
+				
+				
 				Connessione c = new Connessione(rs.getInt("id_connessione"),
 						null, // ingnoro la linea, adesso non ci serve
 						fermata_partenza,
@@ -138,5 +149,4 @@ public class MetroDAO {
 			throw new RuntimeException("Errore DB", e) ;
 		}
 	}
-
 }

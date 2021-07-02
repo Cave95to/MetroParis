@@ -19,14 +19,19 @@ public class Model {
 		MetroDAO dao = new MetroDAO() ;
 		List<Fermata> fermate = dao.getAllFermate() ;
 		
+		// Aggiungiamo vertci
+		
+//      non serve fare for e aggiungere un vertice alla volta		
 //		for(Fermata f : fermate) {
 //			this.grafo.addVertex(f) ;
 //		}
 		
+//		usiamo classe esterna GRAPHS di questo grafo metti tutte le fermate
 		Graphs.addAllVertices(this.grafo, fermate) ;
 		
 		// Aggiungiamo gli archi
 		
+		// doopo ciclo for, per ogni coppia vediamo se sono collegate
 //		for(Fermata f1: this.grafo.vertexSet()) {
 //			for(Fermata f2: this.grafo.vertexSet()) {
 //				if(!f1.equals(f2) && dao.fermateCollegate(f1, f2)) {
@@ -35,6 +40,7 @@ public class Model {
 //			}
 //		}
 		
+		// sfruttiamo oggetti connessioni del db per creare gli archi, ma necessario passare tutte le fermate
 		List<Connessione> connessioni = dao.getAllConnessioni(fermate) ;
 		for(Connessione c: connessioni) {
 			this.grafo.addEdge(c.getStazP(), c.getStazA()) ;
